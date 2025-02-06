@@ -24,7 +24,8 @@ def convert_one_html_to_pdf(html_file, pdf_file, overwrite=False, skip_existing=
         html = file.read()
 
     # Read the header
-    with open("header.html", "r", encoding="utf-8") as file:
+    header_path = Path(__file__).parent / "header.html"
+    with open(header_path, "r", encoding="utf-8") as file:
         header = file.read()
 
     header = BeautifulSoup(header, "html.parser")
@@ -41,6 +42,8 @@ def convert_html_to_pdf(src_folder, dst_folder, overwrite=False, skip_existing=F
     dst_path = Path(dst_folder) 
 
     if src_path.is_file():
+        if dst_path.is_dir():
+            dst_path = dst_path / src_path.with_suffix(".pdf").name
         convert_one_html_to_pdf(src_path, dst_path, overwrite, skip_existing)
         print(f"Converted {src_path} to {dst_path}")
         return
